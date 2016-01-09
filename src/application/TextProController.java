@@ -1,7 +1,5 @@
 package application;
 
-import java.util.function.Consumer;
-
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -14,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.function.Consumer;
 
 
 public class TextProController {
@@ -161,11 +161,11 @@ public class TextProController {
 			
 			// create Document representation of  current text
 			document.Document doc = launch.getDocument(text);
-			
+
 			fIndex = doc.getFleschScore();
 			
 			//get string with two decimal places for index to
-			String fString = String.format("%.2f", fIndex);
+			String fString = String.format("%.4f", fIndex);
 			
 			// display string in text field
 			fleschField.setText(fString);

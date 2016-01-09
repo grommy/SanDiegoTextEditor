@@ -50,10 +50,39 @@ public abstract class Document {
 	// next week when we implement the EfficientDocument class.
 	protected int countSyllables(String word)
 	{
-		// TODO: Implement this method so that you can call it from the 
+		// Implement this method so that you can call it from the
 	    // getNumSyllables method in BasicDocument (module 1) and 
 	    // EfficientDocument (module 2).
-	    return 0;
+        List<String> syllablesInWord;
+        String adjustedStrNoE;
+        boolean eAtTheEnd = false;
+        int size = 0;
+        int numSyllablesInWorld;
+
+		numSyllablesInWorld = 0;
+		if (word.charAt(word.length() - 1) == 'e') {
+			adjustedStrNoE = word.substring(0, word.length() - 1);
+			eAtTheEnd = true;
+		}
+		else {
+			adjustedStrNoE = word;
+		}
+		Document document = new BasicDocument(adjustedStrNoE);
+
+		syllablesInWord = document.getTokens("[AOIUEYaoiuey]+");
+
+		// System.out.print(syllablesInWord);
+		if (syllablesInWord.size()>0) {
+			numSyllablesInWorld=syllablesInWord.size();
+		}
+		else if (eAtTheEnd) {
+			numSyllablesInWorld=syllablesInWord.size()+1;
+			// System.out.print(" +1");
+		}
+		// System.out.println("");
+
+		size+=numSyllablesInWorld;
+	    return size;
 	}
 	
 	/** A method for testing
@@ -116,8 +145,24 @@ public abstract class Document {
 	/** return the Flesch readability score of this document */
 	public double getFleschScore()
 	{
-	    // TODO: Implement this method
-	    return 0.0;
+        double fleshScore = 0.0;
+        int numWords = getNumWords();
+        int numSentences = getNumSentences();
+        int numSyllables = getNumSyllables();
+
+        double wordsToSentencesRatio = 0.0;
+        double syllablesToWordsRatio = 0.0;
+
+        if (numSentences>0) {
+            wordsToSentencesRatio = (numWords + 0.0) / (numSentences + 0.0);
+        }
+
+        if (numWords>0) {
+            syllablesToWordsRatio = (numSyllables + 0.0)/ (numWords + 0.0);
+        }
+        System.out.println(syllablesToWordsRatio);
+        fleshScore = 206.835 - 1.015*wordsToSentencesRatio - 84.6*syllablesToWordsRatio;
+        return fleshScore;
 	}
 	
 	
