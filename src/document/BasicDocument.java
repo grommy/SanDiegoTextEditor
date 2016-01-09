@@ -68,6 +68,9 @@ public class BasicDocument extends Document
             size+=countSyllables(word);
         }
 
+
+
+
         return size;
 	}
 	
