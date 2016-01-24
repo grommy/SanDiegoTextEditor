@@ -16,7 +16,11 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
-		// TODO: Implement this method
+		head = new LLNode<>(null);
+        tail = new LLNode<>(null);
+        size = 0;
+        head.next = tail;
+        tail.prev = head;
 	}
 
 	/**
@@ -25,34 +29,62 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public boolean add(E element ) 
 	{
-		// TODO: Implement this method
-		return false;
+        if (element != null) {
+            LLNode<E> newNode = new LLNode<>(element);
+            newNode.next = tail;
+            newNode.prev = tail.prev;
+            newNode.prev.next = newNode;
+            tail.prev = newNode;
+
+            size++;
+            return true;
+        }
+        else throw new NullPointerException("Element, you try to add is Null");
 	}
 
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
 	public E get(int index) 
 	{
-		// TODO: Implement this method.
-		return null;
+        LLNode<E> currentElement = getElementByIndex(index);
+        return currentElement.data;
 	}
 
-	/**
-	 * Add an element to the list at the specified index
-	 * @param The index where the element should be added
+	/** Add an element to the list at the specified index
+	 * @param index where the element should be added
 	 * @param element The element to add
 	 */
 	public void add(int index, E element ) 
 	{
-		// TODO: Implement this method
+        if (element!=null) {
+            boolean isThisAFirstElemToAdd = (size == index);
+            if (isThisAFirstElemToAdd) {
+                add(element);
+            }
+            else {
+                LLNode<E> currentIndexElement = getElementByIndex(index);
+                LLNode<E> newIndexElement = new LLNode<>(element);
+
+                // switch links
+                newIndexElement.next = currentIndexElement;
+                newIndexElement.prev = currentIndexElement.prev;
+
+                currentIndexElement.prev.next = newIndexElement;
+                currentIndexElement.prev = newIndexElement;
+
+
+                size++;
+            }
+        }
+        else throw new NullPointerException("Element, you try to add is Null");
+
 	}
 
 
 	/** Return the size of the list */
 	public int size() 
 	{
-		// TODO: Implement this method
-		return -1;
+		return size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -63,8 +95,16 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public E remove(int index) 
 	{
-		// TODO: Implement this method
-		return null;
+        LLNode<E> currentElement = getElementByIndex(index);
+
+        // switch links
+        currentElement.next.prev = currentElement.prev;
+        currentElement.prev.next = currentElement.next;
+
+        size--;
+
+        return currentElement.data;
+
 	}
 
 	/**
@@ -76,9 +116,39 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public E set(int index, E element) 
 	{
-		// TODO: Implement this method
-		return null;
-	}   
+        if (element!=null) {
+            E oldElement;
+            LLNode<E> indexNode = getElementByIndex(index);
+
+            oldElement = indexNode.data;
+            indexNode.data = element;
+            return oldElement;
+        }
+        else throw new NullPointerException("Element you try to set is null");
+
+	}
+
+    private LLNode<E> getElementByIndex(int index) {
+        LLNode<E> currentElement = head.next;
+
+        boolean indexIsCorrect = (index<size) && (index>=0);
+
+        if (indexIsCorrect) {
+            for(int i=0; i < index; i++) {
+                try {
+                    currentElement = currentElement.next;
+                }
+                catch (NullPointerException e){
+                    throw new NullPointerException(String.format("Next link is broken on node %d",i));
+                }
+
+            }
+            return currentElement;
+        }
+        else {
+            throw new IndexOutOfBoundsException(String.format("%d Index out of bounds", index));
+        }
+    }
 }
 
 class LLNode<E> 
@@ -87,7 +157,6 @@ class LLNode<E>
 	LLNode<E> next;
 	E data;
 
-	// TODO: Add any other methods you think are useful here
 	// E.g. you might want to add another constructor
 
 	public LLNode(E e) 

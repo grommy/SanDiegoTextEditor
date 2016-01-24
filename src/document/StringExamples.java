@@ -2,9 +2,6 @@ package document;
 
 import java.util.List;
 
-/**
- * Created by admin on 1/9/16.
- */
 public class StringExamples {
     public static void main(String[] args) {
         String s = "%one%%two%%%three%%%%";

@@ -1,5 +1,6 @@
 package textgen;
 
+import java.io.FileNotFoundException;
 import java.util.Random;
 import java.util.HashMap;
 import java.io.PrintWriter;
@@ -7,13 +8,14 @@ import java.io.PrintWriter;
 public class MarkovTextGeneratorGrader {
     private static final int LENGTH = 500;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
+        String feedback = "";
         try {
             MarkovTextGenerator gen = new MarkovTextGeneratorLoL(new Random());
             
             int incorrect = 0;
             int tests = 0;
-            String feedback = "";
+
 
             feedback += "\n** Test 1: Generating text before training...";
             try {
@@ -92,6 +94,9 @@ public class MarkovTextGeneratorGrader {
             f.close();
             return;
         } catch (Exception e) {
+            PrintWriter f = new PrintWriter("grader_output/module3.part2.out");
+            f.println(feedback);
+            f.close();
             System.out.println("Error during runtime: " + e);
         }
     }

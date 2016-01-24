@@ -160,7 +160,7 @@ public abstract class Document {
         if (numWords>0) {
             syllablesToWordsRatio = (numSyllables + 0.0)/ (numWords + 0.0);
         }
-        System.out.println(syllablesToWordsRatio);
+//        System.out.println(syllablesToWordsRatio);
         fleshScore = 206.835 - 1.015*wordsToSentencesRatio - 84.6*syllablesToWordsRatio;
         return fleshScore;
 	}
