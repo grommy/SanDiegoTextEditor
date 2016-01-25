@@ -1,5 +1,7 @@
 package textgen;
 
+import com.sun.deploy.util.StringUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -43,29 +45,29 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
         catch (Exception e) {
             wordsFromText = null;
         }
+        boolean newTrainSetIsEmpty = starter.equals("") || (wordsFromText==null);
 
-
-        if ((!starter.equals("")) && (wordsFromText!=null)) {
+        if (!newTrainSetIsEmpty) {
             String prevWord = starter;
             String nextWord;
             ListNode nodeToAddWords;
 
             for (int i=1; i<wordsFromText.size(); i++) {
                 nextWord = wordsFromText.get(i);
-                nodeToAddWords = getNodeToAddWord(prevWord);
+                nodeToAddWords = getNodeToAddWord(prevWord, wordList);
                 nodeToAddWords.addNextWord(nextWord);
                 prevWord = nextWord;
             }
 
             // add starter to be a next word for the last word in the source text.
-            nodeToAddWords = getNodeToAddWord(wordsFromText.getLast());
+            nodeToAddWords = getNodeToAddWord(wordsFromText.getLast(), wordList);
             nodeToAddWords.addNextWord(starter);
         }
 
 
 	}
 
-    private ListNode getNodeToAddWord(String prevWord) {
+    private ListNode getNodeToAddWord(String prevWord, List<ListNode> wordList) {
         // check if word is already added
         ListNode nodeToAddWords;
         ListNode prevWordNode = new ListNode(prevWord);
@@ -97,18 +99,17 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
             else {
                 String currentWord = starter;
                 String output = "";
+                List<String> outputList = new LinkedList<>();
                 ListNode currentNode;
                 ListNode sameWordNode;
                 int indexOfCurrentWordInList;
                 for(int i=0; i<numWords; i++) {
 
-                    if (i!=numWords-1) {
-                        output = output.concat(currentWord+" ");
-                    }
-                    else output = output.concat(currentWord);
+                    outputList.add(currentWord);
 
                     sameWordNode = new ListNode(currentWord);
                     indexOfCurrentWordInList = wordList.indexOf(sameWordNode);
+
                     assert indexOfCurrentWordInList > 0;
                     assert indexOfCurrentWordInList < wordList.size();
 
@@ -116,13 +117,13 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
                     currentWord =  currentNode.getRandomNextWord(rnGenerator);
 
                 }
+                output = StringUtils.join(outputList, " ");
                 return output;
             }
         }
 
 	}
-	
-	
+
 	// Can be helpful for debugging
 	@Override
 	public String toString()

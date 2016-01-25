@@ -25,7 +25,7 @@ public class MarkovTextGeneratorLoLTest {
         Random random = new Random();
         markovTextGenerator = new MarkovTextGeneratorLoL(random);
         shortString = "You say yes, I say! no, sala=din";
-        wordsInShortString = new String[]{"You", "say", "yes", "I", "say", "no", "sala=din"};
+        wordsInShortString = new String[]{"You", "say", "yes,", "I", "say!", "no,", "sala=din"};
         noWordsString = "123 , , . ; 45";
 
         textString2 = "You say yes, I say no, "+
@@ -77,17 +77,6 @@ public class MarkovTextGeneratorLoLTest {
 
         assertEquals("nextWords for hi", "there", wordsList.get(0).getNextWords().get(0));
         assertEquals("nextWords for hi", "Leo", wordsList.get(0).getNextWords().get(1));
-    }
-
-    @Test
-    public void testGenerateText() throws Exception {
-        assert false;
-
-    }
-
-    @Test
-    public void testRetrain() throws Exception {
-        assert false;
     }
 
     @Test
