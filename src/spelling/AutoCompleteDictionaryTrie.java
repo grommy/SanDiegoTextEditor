@@ -1,10 +1,6 @@
 package spelling;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 /** 
  * An trie data structure that implements the Dictionary and the AutoComplete ADT
@@ -22,14 +18,36 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 		root = new TrieNode();
 	}
 	
-	
+
+
 	/** Insert a word into the trie.
 	 * For the basic part of the assignment (part 2), you should ignore the word's case.
 	 * That is, you should convert the string to all lower case as you insert it. */
 	public boolean addWord(String word)
 	{
-	    //TODO: Implement this method.
-	    return false;
+		String wordToAdd = word.toLowerCase();
+        TrieNode currNode = root;
+        TrieNode nextNode;
+        for (Character letter: wordToAdd.toCharArray()) {
+
+            nextNode = currNode.insert(letter);
+            if (nextNode!=null) {
+                currNode = nextNode;
+            }
+            else {
+                currNode = currNode.getChild(letter);
+            }
+
+        }
+
+        if (currNode.endsWord()) {
+            // this word already exists in dict
+            return false;
+        }
+
+        currNode.setEndsWord(true);
+	    size++;
+        return true;
 	}
 	
 	/** 
@@ -38,18 +56,32 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public int size()
 	{
-	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
 	/** Returns whether the string is a word in the trie */
 	@Override
-	public boolean isWord(String s) 
-	{
-	    // TODO: Implement this method
-		return false;
-	}
+	public boolean isWord(String s) {
+        TrieNode currNode = findStem(s);
+
+        return currNode != null && currNode.endsWord();
+    }
+
+    private TrieNode findStem (String s) {
+        String stringToSearch = s.toLowerCase();
+        TrieNode currNode = root;
+        for (Character character: stringToSearch.toCharArray()) {
+            if (currNode.getValidNextCharacters().contains(character)) {
+                currNode = currNode.getChild(character);
+            }
+            else {
+                return null;
+            }
+        }
+
+        return currNode;
+    }
 
 	/** 
 	 *  * Returns up to the n "best" predictions, including the word itself,
@@ -61,7 +93,6 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
      */@Override
      public List<String> predictCompletions(String prefix, int numCompletions) 
      {
-    	 // TODO: Implement this method
     	 // This method should implement the following algorithm:
     	 // 1. Find the stem in the trie.  If the stem does not appear in the trie, return an
     	 //    empty list
@@ -75,8 +106,32 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
-    	 
-         return null;
+
+         List<String> completions = new LinkedList<>();
+         Set <Character> characters;
+
+         TrieNode currNode = findStem(prefix);
+
+         Queue<TrieNode> completionsQueue = new LinkedList<>();
+         completionsQueue.add(currNode);
+         while (completions.size()<numCompletions && !completionsQueue.isEmpty()) {
+             currNode = completionsQueue.poll();
+             if (currNode!=null) {
+                 if (currNode.endsWord()) {
+                     completions.add(currNode.getText());
+                 }
+                 characters = currNode.getValidNextCharacters();
+                 for (Character currCharacter : characters) {
+                     completionsQueue.add(currNode.getChild(currCharacter));
+                 }
+             }
+
+
+         }
+
+//          completions.sort(Comparator.<String>naturalOrder());
+
+         return completions;
      }
 
  	// For debugging

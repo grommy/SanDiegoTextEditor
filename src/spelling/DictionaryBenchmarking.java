@@ -25,7 +25,7 @@ public class DictionaryBenchmarking {
 
 		// The number of steps to run.  
 		// You can play around with this.
-		int numSteps = 20;
+		int numSteps = 5;
 		
 		// The number of words to start with. 
 		// You can play around with this.
@@ -41,22 +41,26 @@ public class DictionaryBenchmarking {
 			DictionaryLL llDict = new DictionaryLL();
 			DictionaryBST bstDict = new DictionaryBST();
 			
-			DictionaryLoader.loadDictionary(llDict, dictFile, numToCheck);
-			DictionaryLoader.loadDictionary(bstDict, dictFile, numToCheck);
+
+
 			
-			long startTime = System.nanoTime();
-			for (int i = 0; i < trials; i++) {
-				llDict.isWord(notInDictionary);
-			}
-			long endTime = System.nanoTime();
-			long timeLL = (endTime - startTime);  
+			double startTime = System.nanoTime()/10000000.0;
+//            DictionaryLoader.loadDictionary(llDict, dictFile, numToCheck);
+//			for (int i = 0; i < trials; i++) {
+//				llDict.isWord(notInDictionary);
+//			}
+			double endTime = System.nanoTime()/10000000.0;
+			double timeLL = (endTime - startTime)/100.0;
 			
-			startTime = System.nanoTime();
+//			startTime = System.nanoTime();
+			startTime = System.nanoTime()/10000000.0;
+            DictionaryLoader.loadDictionary(bstDict, dictFile, numToCheck);
 			for (int i = 0; i < trials; i++) {
 				bstDict.isWord(notInDictionary);
 			}
-			endTime = System.nanoTime();
-			long timeBST = (endTime - startTime);
+//			endTime = System.nanoTime();
+			endTime = System.nanoTime()/10000000.0;
+			double timeBST = (endTime - startTime)/100.0;
 			
 			System.out.println(numToCheck + "\t" + timeLL + "\t" + timeBST);
 			

@@ -3,13 +3,13 @@
  */
 package spelling;
 
-import static org.junit.Assert.*;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author UC San Diego MOOC team
@@ -19,7 +19,8 @@ public class AutoCompleteDictionaryTrieTester {
 
 	private String dictFile = "data/words.small.txt"; 
 
-	AutoCompleteDictionaryTrie emptyDict; 
+	AutoCompleteDictionaryTrie emptyDict;
+	AutoCompleteDictionaryTrie emptyDict2;
 	AutoCompleteDictionaryTrie smallDict;
 	AutoCompleteDictionaryTrie largeDict;
 	
@@ -32,6 +33,8 @@ public class AutoCompleteDictionaryTrieTester {
 		emptyDict = new AutoCompleteDictionaryTrie();
 		smallDict = new AutoCompleteDictionaryTrie();
 		largeDict = new AutoCompleteDictionaryTrie();
+
+		emptyDict2 = new AutoCompleteDictionaryTrie();
 
 		smallDict.addWord("Hello");
 		smallDict.addWord("HElLo");
@@ -135,6 +138,9 @@ public class AutoCompleteDictionaryTrieTester {
 		List<String> completions;
 		completions = smallDict.predictCompletions("", 0);
 		assertEquals(0, completions.size());
+
+        completions = emptyDict2.predictCompletions("abc", 4);
+        assertEquals(0, completions.size());
 		
 		completions = smallDict.predictCompletions("",  4);
 		assertEquals(4, completions.size());
